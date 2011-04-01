@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  c_sender_id: 1
+  c_recipient_id: 1
+  c_sender_del: false
+  c_recipient_del: false
+  subject: MyString
+  c_recipient2_id: 1
+
+two:
+  c_sender_id: 1
+  c_recipient_id: 1
+  c_sender_del: false
+  c_recipient_del: false
+  subject: MyString
+  c_recipient2_id: 1

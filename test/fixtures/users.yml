@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  email: MyString
+  salt: MyString
+  encrypted_password: MyString
+  photo_file_name: MyString
+  photo_content_type: MyString
+  photo_file_size: 1
+  photo_updated_at: 2011-03-30 10:29:30
+  invitation_id: 1
+  invitation_limit: 1
+  admin: false
+
+two:
+  name: MyString
+  email: MyString
+  salt: MyString
+  encrypted_password: MyString
+  photo_file_name: MyString
+  photo_content_type: MyString
+  photo_file_size: 1
+  photo_updated_at: 2011-03-30 10:29:30
+  invitation_id: 1
+  invitation_limit: 1
+  admin: false

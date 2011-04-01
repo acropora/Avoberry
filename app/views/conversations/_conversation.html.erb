@@ -1,0 +1,3 @@
+<%= conversation.msgs.last.sender.name %>
+<%= link_to conversation.subject, conversation %>
+<%= link_to 'Delete', conversation_path(conversation.id), :method => 'delete' %>

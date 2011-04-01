@@ -1,0 +1,8 @@
+<% conversations.each do |c| %>
+	<% if (current_user == c.c_sender) & !c.c_sender_del %>
+		<%= image_tag c.msgs.last.sender.photo.url %>
+		<%= c.msgs.last.sender.name %>
+		<%= link_to c.subject, c %>
+		<%= link_to 'Delete', conversation_path(c.id), :method => 'delete', :confirm => 'Are you sure?' %>
+	<% end %>
+<% end %>

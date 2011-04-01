@@ -1,0 +1,5 @@
+<% if @found_conversations.empty? %>
+	<p>No conversations found with search term <%= params[:search].to_s %>.</p>
+<% else %>
+	<%= render @found_conversations %>
+<% end %>

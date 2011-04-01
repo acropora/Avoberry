@@ -1,0 +1,12 @@
+<%= link_to '<< Inbox', inbox_conversations_path %>
+<h3><%= @conversation.subject %></h3>
+<h4>Conversation between <%= @conversation.c_sender.name %> and <%= @conversation.c_recipient.name %></h4>
+
+<%= render @conversation.msgs %>
+<%= form_tag reply_conversation_path, :method => 'post' do %>
+	<p>
+	<%= label_tag :reply %><br />
+	<%= text_area_tag :content, nil, :cols => 50, :rows => 4 %>
+	</p>
+	<%= submit_tag "Reply" %>
+<% end %>

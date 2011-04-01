@@ -1,0 +1,19 @@
+<%= form_tag conversations_path, :method => 'post' do %>
+	<p>
+	<%= label_tag :to %>
+	<%= text_field_tag :recipient %>
+	</p>
+	<p>
+	<%= label_tag :subject %>
+	<%= text_field_tag :subject %>
+	</p>
+	<p>
+	<%= label_tag :message %><br />
+	<%= text_area_tag :content, nil, :cols => 50, :rows => 4 %>
+	</p>
+	<p>
+	<%= submit_tag "Send message", :name => 'send' %>
+	<%= submit_tag "Cancel", :name => 'cancel' %>
+	</p>
+<% end %>
+

@@ -1,0 +1,33 @@
+<h1>Sign up</h1>
+
+<%= form_for @user, :html => { :multipart => true } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	<%-# f.hidden_field :invitation_token %>
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name, :placeholder => 'Your full name' %>
+	</div>
+	<div class="field">
+	    <%= f.label :email %><br />
+	    <%= f.text_field :email, :placeholder => 'Your unique email address' %>
+	</div>
+	<div class="field">
+	    <%= f.label :password %><br />
+	    <%= f.password_field :password, :placeholder => 'At least 6 characters long' %>
+	</div>
+	<div class="field">
+	    <%= f.label :password_confirmation, "Confirmation" %><br />
+	    <%= f.password_field :password_confirmation, :placeholder => 'Enter password again' %>
+	</div>
+	<br />
+	<div class="field">
+		<%= f.label :photo, "Profile picture" %>
+		<%= f.file_field :photo %>
+	</div>
+		<%-# f.label :role, "I am a..." %>
+		<%-# select(:user, :role, [['Student'], ['Teacher'], ['Parent']]) %>
+	<br />
+	<div class="actions">
+	    <%= f.submit "Sign up" %>
+	</div>
+<% end %>
