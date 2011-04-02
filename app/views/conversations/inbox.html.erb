@@ -2,8 +2,6 @@
 <%= render 'search' %>
 <%= link_to 'New Conversation', new_conversation_path %><br />
 <%= link_to 'Sent', sent_conversations_path %><br />
-<% if @received_conversations.nil? %>
-	<p>You have no messages in your inbox</p>
-<% else %>
+<div id='received_conversations'>
 	<%= render 'received_conversations', :conversations => @received_conversations %>
-<% end %>
+</div>

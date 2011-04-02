@@ -5,7 +5,7 @@ class ConversationsController < ApplicationController
     :conditions => ["c_recipient_id = :id or c_recipient2_id = :id", {:id => current_user.id}])
     @found_conversations = Array.new
     received_conversations.each do |c|
-      @found_conversations << c if search_conv(c, params[:search])
+      @found_conversations << c if c.search_msgs(params[:search])
       @test = search_conv(c, params[:search].to_s.downcase)
     end
   end
@@ -16,7 +16,7 @@ class ConversationsController < ApplicationController
 
   def show
     @conversation = Conversation.find(params[:id])
-    all_read(@conversation)
+    @conversation.all_read(current_user)
   end
 
   def create
@@ -33,9 +33,9 @@ class ConversationsController < ApplicationController
                                           :subject => params[:subject],
                                           :c_sender_del => false,
                                           :c_recipient_del => false)
-        if @conversation.save && create_msg(@conversation, params[:content])
-          flash.now[:sucess] = 'Conversation started!'
-          render 'inbox'
+        if @conversation.save and @conversation.create_msg(params[:content], current_user)
+          flash[:sucess] = 'Conversation started!'
+          redirect_to inbox_conversations_path
         else
           flash.now[:error] = 'Sorry, there was a problem.  Please try again.'
           @title = 'New conversation'
@@ -53,35 +53,40 @@ class ConversationsController < ApplicationController
     @conversation = Conversation.find(params[:id])
     if @conversation.c_sender == current_user 
       if @conversation.update_attributes(:c_sender_del => true)
-        flash.now[:notice] = 'Conversation deleted'
+        flash[:notice] = 'Conversation deleted'
       else
-        flash.now[:error] = 'Sorry, there was a problem.  Please try again'
+        flash[:error] = 'Sorry, there was a problem.  Please try again'
       end
     end
     if @conversation.c_recipient == current_user
       if @conversation.update_attributes(:c_recipient_del => true)
-        flash.now[:notice] = 'Conversation deleted'
+        flash[:notice] = 'Conversation deleted'
       else
-        flash.now[:error] = 'Sorry, there was a problem.  Please try again'
+        flash[:error] = 'Sorry, there was a problem.  Please try again'
       end
     end
-    if @conversation.c_sender_del && @conversation.c_recipient_del
+    if @conversation.c_sender_del and @conversation.c_recipient_del
       if @conversation.destroy
-        flash.now[:notice] = 'Conversation deleted'
+        flash[:notice] = 'Conversation deleted'
       else
-        flash.now[:error] = 'Sorry, there was a problem.  Please try again.'
+        flash[:error] = 'Sorry, there was a problem.  Please try again.'
       end
     end
-    @title = 'Inbox'
-    render 'inbox'  
+    @received_conversations = get_received
+    @received_conversations.each do |c|
+      c.update_count(current_user)
+    end
+    respond_to do |format|
+      format.html { redirect_to inbox_conversations_path }
+      format.js
+    end   
   end
   
   def inbox
     @title = 'Inbox'
-    @received_conversations = Conversation.find(:all, 
-    :conditions => ["c_recipient_id = :id or c_recipient2_id = :id", {:id => current_user.id}])
+    @received_conversations = get_received
     @received_conversations.each do |c|
-      c.update_attributes(:count => count_unread(c))
+      c.update_count(current_user)
     end    
   end
 
@@ -91,59 +96,38 @@ class ConversationsController < ApplicationController
   end
   
   def reply
-    conv = Conversation.find(params[:id])
-    @msg = Msg.new( :conversation_id => params[:id],
+    @conv = Conversation.find(params[:id])
+    msg = Msg.new( :conversation_id => params[:id],
                     :content => params[:content],
                     :sender_id => current_user.id,
                     :c_sender_read => false,
                     :c_recip_read => false)
-    if @msg.save
-      if current_user == conv.c_recipient
-        conv.update_attributes(:c_sender_del => false) if conv.c_sender_del
-        conv.update_attributes(:c_recipient2_id => conv.c_sender_id) if conv.c_recipient2_id.nil?
+    if msg.save
+      if current_user == @conv.c_recipient
+        @conv.update_attributes(:c_sender_del => false) if @conv.c_sender_del
+        @conv.update_attributes(:c_recipient2_id => @conv.c_sender_id) if @conv.c_recipient2_id.nil?
+        msg.update_attributes(:c_recip_read => true)
       end
-      if current_user == conv.c_sender
-        conv.update_attributes(:c_recipient_del => false) if conv.c_recipient_del
+      if current_user == @conv.c_sender
+        @conv.update_attributes(:c_recipient_del => false) if @conv.c_recipient_del
+        msg.update_attributes(:c_sender_read => true)
       end
       flash[:success] = 'Reply sent!'
     else
       flash[:error] = 'Sorry, there was a problem.  Please try again'
     end
-    redirect_to conv
+    @conv.all_read(current_user)
+    respond_to do |format|
+      format.html { redirect_to @conv }
+      format.js
+    end
    end
-  
+    
   private
-   
-    def create_msg(conversation, content)
-      @msg = Msg.new( :conversation_id => conversation.id,
-                      :content => content,
-                      :sender_id => current_user.id, 
-                      :c_sender_read => false,
-                      :c_recip_read => false)
-      @msg.save
-    end
-    
-    def all_read(conversation)
-      conversation.msgs.each do |msg|
-        if (current_user == conversation.c_sender) & !msg.c_sender_read
-          msg.update_attributes(:c_sender_read => true)
-        end
-        if (current_user == conversation.c_recipient) & !msg.c_recip_read
-          msg.update_attributes(:c_recip_read => true)
-        end
-      end
-    end
-    
-    def count_unread(conversation)
-      count = 0
-      conversation.msgs.each do |msg|
-        count += 1 if (current_user == conversation.c_sender) & !msg.c_sender_read
-        if (current_user == conversation.c_recipient) & !msg.c_recip_read
-          count += 1
-          count -= 1 if (current_user == conversation.c_sender) & !msg.c_sender_read    
-        end 
-      end
-      return count
+  
+    def get_received
+      Conversation.find(:all, :conditions => 
+      ["c_recipient_id = :id or c_recipient2_id = :id", {:id => current_user.id}])
     end
     
     def search_conv(conversation, search)

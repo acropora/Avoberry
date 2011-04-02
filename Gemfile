@@ -4,6 +4,8 @@ gem 'rails', '3.0.4'
 
 gem 'paperclip'
 
+gem 'rmagick'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 

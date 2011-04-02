@@ -1,0 +1,2 @@
+$("show_conv").update('<%= escape_javascript(render(@conv.msgs)) %>')
+$("reply_form").update('<%= text_area_tag :content, nil, :cols => 50, :rows => 4 %>')

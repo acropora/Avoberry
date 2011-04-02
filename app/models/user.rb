@@ -45,6 +45,12 @@ class User < ActiveRecord::Base
      return user if user.salt == cookie_salt
    end
    
+   def self.search(search)
+     if search
+       find(:all, :conditions => ['name LIKE ?', "%#{search}%"])
+      end
+    end
+   
    private
    
     def encrypt_password
