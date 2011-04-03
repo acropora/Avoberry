@@ -1,8 +1,24 @@
-<% conversations.each do |c| %>
-	<% if (current_user == c.c_sender) & !c.c_sender_del %>
-		<%= image_tag c.msgs.last.sender.photo.url %>
-		<%= c.msgs.last.sender.name %>
-		<%= link_to c.subject, c %>
-		<%= link_to 'Delete', conversation_path(c.id), :method => 'delete', :confirm => 'Are you sure?' %>
+<% if conversations.empty? %>
+	<p>You haven't sent any messages</p>
+	<%= link_to 'Start now!', new_conversations_path %>
+<% else %>
+	<% conversations.each do |c| %>
+		<% if (current_user == c.c_sender) & !c.c_sender_del %>
+			<%= image_tag c.msgs.last.sender.photo.url(:thumb) %>
+			<%= link_to c.msgs.last.sender.name, c.msgs.last.sender %>
+			<% if c.count > 0 %>
+				<b><%= link_to c.subject, c %></b>
+			<% else %>
+				<%= link_to c.subject, c %>
+			<% end %>
+			<small style="color:grey"><%= c.msgs.first.content[0,30] %></small>
+			<% if c.count > 0 %>
+				<b>[<%= c.count %>]</b>
+			<% end %>
+			<%= form_tag conversation_path(c.id), :method => 'delete', :remote => true do %>
+				<%= hidden_field_tag 'folder', 'sent' %>
+				<%= submit_tag 'Delete', :name => nil, :confirm => 'Are you sure?' %>
+			<% end %>
+		<% end %>
 	<% end %>
 <% end %>

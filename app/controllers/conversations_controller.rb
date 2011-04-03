@@ -50,34 +50,40 @@ class ConversationsController < ApplicationController
   end
   
   def destroy
-    @conversation = Conversation.find(params[:id])
-    if @conversation.c_sender == current_user 
-      if @conversation.update_attributes(:c_sender_del => true)
-        flash[:notice] = 'Conversation deleted'
+    conversation = Conversation.find(params[:id])
+    if conversation.c_sender == current_user 
+      if conversation.update_attributes(:c_sender_del => true)
+        flash.now[:notice] = 'Conversation deleted'
       else
-        flash[:error] = 'Sorry, there was a problem.  Please try again'
+        flash.now[:error] = 'Sorry, there was a problem.  Please try again'
       end
     end
-    if @conversation.c_recipient == current_user
-      if @conversation.update_attributes(:c_recipient_del => true)
-        flash[:notice] = 'Conversation deleted'
+    if conversation.c_recipient == current_user
+      if conversation.update_attributes(:c_recipient_del => true)
+        flash.now[:notice] = 'Conversation deleted'
       else
-        flash[:error] = 'Sorry, there was a problem.  Please try again'
+        flash.now[:error] = 'Sorry, there was a problem.  Please try again'
       end
     end
-    if @conversation.c_sender_del and @conversation.c_recipient_del
-      if @conversation.destroy
-        flash[:notice] = 'Conversation deleted'
+    if conversation.c_sender_del and conversation.c_recipient_del
+      if conversation.destroy
+        flash.now[:notice] = 'Conversation deleted'
       else
-        flash[:error] = 'Sorry, there was a problem.  Please try again.'
+        flash.now[:error] = 'Sorry, there was a problem.  Please try again.'
       end
     end
-    @received_conversations = get_received
-    @received_conversations.each do |c|
+    if params[:folder] == 'sent'
+      @conversations = current_user.sent_conversations
+      @conv_partial = 'sent_conversations'
+    else
+      @conversations = get_received
+      @conv_partial = 'received_conversations'
+    end
+    @conversations.each do |c|
       c.update_count(current_user)
     end
     respond_to do |format|
-      format.html { redirect_to inbox_conversations_path }
+      format.html { render inbox_conversations_path } #need to add extra inbox function calls later
       format.js
     end   
   end

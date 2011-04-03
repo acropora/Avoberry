@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   attr_accessor :password
   attr_accessible :name, :email, :password, :password_confirmation, :photo, :invitaiton_token
   
-  has_attached_file :photo #:styles => { :smaill => "150x150>" },
+  has_attached_file :photo, :styles => { :small => "150x150>", :thumb => "75x75>" } #,
                     #:url => "/:attachment/:id/:style/:basename.:extension",
                     #:path => ":rails_root/public/:attachment/:id/:style:basename.:extension"
                     

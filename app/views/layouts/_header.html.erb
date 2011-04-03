@@ -6,15 +6,17 @@
 		<li><%= link_to "Sign out", signout_path, :method => :delete %></li>
 		<%= render '/users/user_search' %>
 	<% else %>
-		<%= form_for(:session, :url => sessions_path) do |f| %>
-			<%= f.label :email %>
-			<%= f.text_field :email, :size => 15 %>
-			<%= f.label :password %>
-			<%= f.password_field :password, :size => 15 %>
-			<%= f.submit "Sign in" %><br />
-			<%= f.label :Remember_me %>
-			<%= f.check_box :permanent %>
-			<li><%= link_to "Forgot your password?", '#' %>
+		<% if !(@title == 'Sign in') %>
+			<%= form_for(:session, :url => sessions_path) do |f| %>
+				<%= f.label :email %>
+				<%= f.text_field :email, :size => 15 %>
+				<%= f.label :password %>
+				<%= f.password_field :password, :size => 15 %>
+				<%= f.submit "Sign in" %><br />
+				<%= f.label :Remember_me %>
+				<%= f.check_box :permanent %>
+				<li><%= link_to "Forgot your password?", '#' %>
+			<% end %>
 		<% end %>
 	<% end %>
 </ul>

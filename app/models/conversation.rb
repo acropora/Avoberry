@@ -8,6 +8,8 @@ class Conversation < ActiveRecord::Base
   belongs_to :c_sender, :class_name => 'User'
   belongs_to :c_recipient, :class_name => 'User'
   
+  before_create :set_count
+  
   default_scope :order => 'conversations.created_at DESC'
   
   def update_count(user)
@@ -52,6 +54,11 @@ class Conversation < ActiveRecord::Base
       return false
     end
   end
-        
   
+  private
+  
+    def set_count
+      self.count = 0
+    end 
+    
 end

@@ -1,1 +1,1 @@
-$("received_conversations").update("<%= escape_javascript(render 'received_conversations', :conversations => @received_conversations) %>")
+$("conversations").update("<%= escape_javascript(render @conv_partial, :conversations => @conversations) %>")

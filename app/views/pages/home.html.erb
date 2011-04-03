@@ -1,1 +1,7 @@
-<p>Temporary homepage</p>
+<p>Project Avocado v1.0.  BETA release of simple messaging system.</p>
+<% if signed_in? %>
+	<p>Only site functionality so far is the inbox.  Try it out!</p>
+	<%= link_to "Inbox", inbox_conversations_path %>
+<% else %>
+	<%= link_to "Sign up!", signup_path %>
+<% end %>

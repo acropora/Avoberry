@@ -1,10 +1,5 @@
 <h3>Sent</h3>
 <%= link_to 'Inbox', inbox_conversations_path %><br />
-<% if @sent_conversations.empty? %>
-	<p>
-	You have no sent conversations.  
-	<%= link_to 'Send a conversation now!', new_conversation_path %>
-	</p>
-<% else %>
+<div id='conversations'>
 	<%= render 'sent_conversations', :conversations => @sent_conversations %>
-<% end %>
+</div>

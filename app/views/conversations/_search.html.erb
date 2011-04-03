@@ -1,6 +1,6 @@
 <%= form_tag conversations_path, :method => 'get' do %>
 	<p>
-		<%= text_field_tag :search, params[:search], :placeholder => 'Search messages' %>
+		<%= text_field_tag :search, params[:search], :placeholder => 'Search inbox' %>
 		<%= submit_tag "Go!", :name => nil %><br />
 	</p>
 <% end %>
