@@ -1,6 +1,9 @@
 Avoberry::Application.routes.draw do
 
-  resources :users
+  resources :users do
+    post :reset, :on => :collection
+  end
+  
   resources :sessions, :only => [:new, :create, :destroy]
   
   ### Conversations
@@ -16,6 +19,7 @@ Avoberry::Application.routes.draw do
   get '/help' => 'pages#help'
   get 'signup' => 'users#new'
   get '/signin' => 'sessions#new'
+  get '/recover' => 'pages#recover'
   
   delete '/signout' => 'sessions#destroy'
   

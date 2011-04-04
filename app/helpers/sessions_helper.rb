@@ -1,4 +1,5 @@
 module SessionsHelper
+  
   def sign_in(user, permanent)
     if permanent == '1'
       cookies.permanent.signed[:remember_token] = [user.id, user.salt]
@@ -41,6 +42,15 @@ module SessionsHelper
   
   def current_user?(user)
     user == current_user
+  end
+  
+  def check_change_password
+    if current_user.change_password
+      flash[:notice] = 'Please change your password'
+      redirect_to edit_user_path(current_user)
+    else
+      return true
+    end
   end
       
   private

@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :password
-  attr_accessible :name, :email, :password, :password_confirmation, :photo, :invitaiton_token
+  attr_accessible :name, :email, :password, :password_confirmation, :photo, :invitaiton_token, :change_password
   
   has_attached_file :photo, :styles => { :small => "150x150>", :thumb => "75x75>" } #,
                     #:url => "/:attachment/:id/:style/:basename.:extension",
@@ -50,6 +50,26 @@ class User < ActiveRecord::Base
        find(:all, :conditions => ['name LIKE ?', "%#{search}%"])
       end
     end
+   
+   def reset_password
+     random_pw = put_password(Digest::SHA1.hexdigest([Time.now, rand].join)[0,8])
+     (self.change_password = true) if random_pw
+     if save
+       return random_pw
+     else
+       return false
+     end
+   end
+   
+   def put_password(pw)
+     self.password = pw
+     self.encrypted_password = encrypt(password)
+     if save
+       return password 
+     else
+       return false
+     end
+   end
    
    private
    

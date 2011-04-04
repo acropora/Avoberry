@@ -1,5 +1,7 @@
 class ConversationsController < ApplicationController
   
+  before_filter :check_change_password
+  
   def index
     received_conversations = Conversation.find(:all, 
     :conditions => ["c_recipient_id = :id or c_recipient2_id = :id", {:id => current_user.id}])
@@ -44,8 +46,8 @@ class ConversationsController < ApplicationController
       end
     end
     if !params[:cancel].nil?
-      flash.now[:notice] = 'Message canceled'
-      render 'new'
+      flash[:notice] = 'Message canceled'
+      redirect_to inbox_conversations_path 
     end
   end
   

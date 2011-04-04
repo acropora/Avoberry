@@ -1,6 +1,6 @@
 <% if conversations.empty? %>
 	<p>You haven't sent any messages</p>
-	<%= link_to 'Start now!', new_conversations_path %>
+	<%= link_to 'Start now!', new_conversation_path %>
 <% else %>
 	<% conversations.each do |c| %>
 		<% if (current_user == c.c_sender) & !c.c_sender_del %>

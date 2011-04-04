@@ -13,5 +13,13 @@ class PagesController < ApplicationController
   def help
     @title = 'Help'
   end
+  
+  def recover
+    if signed_in?
+      redirect_to current_user
+    else
+      @title = 'Recover your password'
+    end
+  end
 
 end

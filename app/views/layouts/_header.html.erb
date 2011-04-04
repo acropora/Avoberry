@@ -1,23 +1,24 @@
+<% if !signed_in? %>
+	<% if !(@title == 'Sign in') %>
+		<%= form_for(:session, :url => sessions_path) do |f| %>
+			<%= f.label :email %>
+			<%= f.text_field :email, :size => 15 %>
+			<%= f.label :password %>
+			<%= f.password_field :password, :size => 15 %>
+			<%= f.submit "Sign in" %><br />
+			<%= f.label :Remember_me %>
+			<%= f.check_box :permanent %>
+			<li><%= link_to "Forgot your password?", recover_path %>
+		<% end %>
+	<% end %>
+<% end %>
 <ul>
+	<li><%= link_to "Home", root_path %></li>
 	<% if signed_in? %>
-		<li>Signed in as <%=link_to current_user.name, current_user %></li><br />
-		<li><%= link_to "Home", root_path %></li>
 		<li><%= link_to "Settings", edit_user_path(current_user) %></li>
 		<li><%= link_to "Sign out", signout_path, :method => :delete %></li>
+		<li>Signed in as <%=link_to current_user.name, current_user %></li><br />
 		<%= render '/users/user_search' %>
-	<% else %>
-		<% if !(@title == 'Sign in') %>
-			<%= form_for(:session, :url => sessions_path) do |f| %>
-				<%= f.label :email %>
-				<%= f.text_field :email, :size => 15 %>
-				<%= f.label :password %>
-				<%= f.password_field :password, :size => 15 %>
-				<%= f.submit "Sign in" %><br />
-				<%= f.label :Remember_me %>
-				<%= f.check_box :permanent %>
-				<li><%= link_to "Forgot your password?", '#' %>
-			<% end %>
-		<% end %>
 	<% end %>
 </ul>
 

@@ -1,26 +1,36 @@
 <h3>Edit your profile</h3>
 
-<%= form_for @user, :html => { :multipart => true } do |f| %>
-	<%= render 'shared/error_messages', :object => f.object %>
+<%= form_tag user_path(current_user), :method => 'put', :html => { :multipart => true } do %>
+	<%= render 'shared/error_messages', :object => current_user %>
 	<div class="field">
-		<%= f.label :name %><br />
-		<%= f.text_field :name %>
+		<%= label_tag :name %><br />
+		<%= text_field_tag :name %>
 	</div>
 	<div class="field">
-		<%= f.label :email %><br />
-		<%= f.text_field :email %>
+		<%= label_tag :email %><br />
+		<%= text_field_tag :email %>
 	</div>
 	<div class="field">
-		<%= f.label :password %><br />
-		<%= f.password_field :password %>
+		<%= label_tag :old_password %><br />
+		<%= password_field_tag :old_password %>
 	</div>
 	<br />
 	<div class="field">
-		<%= f.label :photo, "Profile picture" %>
-		<%= f.file_field :photo %>
+		<%= label_tag :new_password %><br />
+		<%= password_field_tag :password %>
+	</div>
+	<br />
+	<div class="field">
+		<%= label_tag :confirm_password %><br />
+		<%= password_field_tag :password_confirmation %>
+	</div>
+	<br />
+	<div class="field">
+		<%= label_tag :photo, "Profile picture" %>
+		<%= file_field_tag :photo %>
 	</div>
 	<br />
 	<div class="actions">
-		<%= f.submit "Update" %>
+		<%= submit_tag "Update" %>
 	</div>
 <% end %>
