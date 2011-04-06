@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
   has_attached_file :photo, :styles => { :small => "150x150>", :thumb => "75x75>" } #,
                     #:url => "/:attachment/:id/:style/:basename.:extension",
                     #:path => ":rails_root/public/:attachment/:id/:style:basename.:extension"
+  
+  #posts
+  has_many :received_posts, :class_name => 'Post', :foreign_key => 'user_id'
+  has_many :sent_posts, :class_name => 'Post', :foreign_key => 'poster_id'
                     
   #validations
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

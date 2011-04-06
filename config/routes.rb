@@ -2,8 +2,10 @@ Avoberry::Application.routes.draw do
 
   resources :users do
     post :reset, :on => :collection
+    post :comment, :on => :member
   end
   
+  resources :posts
   resources :sessions, :only => [:new, :create, :destroy]
   
   ### Conversations

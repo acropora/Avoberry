@@ -1,1 +1,7 @@
 <%= image_tag @user.photo.url(:thumb) %> <%= @user.name %>
+<div id="posts">
+	<%= render @user_posts %>
+</div>
+<div id="post_partial">
+	<%= render 'post_form', :user_id => @user.id %>
+</div>

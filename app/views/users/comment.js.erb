@@ -1,0 +1,2 @@
+$("posts").update('<%= escape_javascript(render(@user_posts)) %>')
+$("post_partial").update("<%= escape_javascript(render('post_form', :user_id => @user.id)) %>")

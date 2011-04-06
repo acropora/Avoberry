@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110403184617) do
+ActiveRecord::Schema.define(:version => 20110405024844) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject"
@@ -40,6 +40,17 @@ ActiveRecord::Schema.define(:version => 20110403184617) do
 
   add_index "msgs", ["conversation_id"], :name => "index_msgs_on_conversation_id"
   add_index "msgs", ["sender_id"], :name => "index_msgs_on_sender_id"
+
+  create_table "posts", :force => true do |t|
+    t.string   "content"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "poster_id"
+  end
+
+  add_index "posts", ["poster_id"], :name => "index_posts_on_poster_id"
+  add_index "posts", ["user_id"], :name => "index_posts_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

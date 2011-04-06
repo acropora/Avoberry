@@ -16,6 +16,8 @@ class UsersController < ApplicationController
   def show
     @user = User.find_by_id(params[:id])
     @title = @user.name
+    @post = current_user.sent_posts.build
+    @user_posts = @user.received_posts
     #@feed_posts = @user.post_feed  
     #@feed_assignments = @user.assignment_feed
   end
@@ -77,6 +79,22 @@ class UsersController < ApplicationController
     end
   end
   
+  def comment
+    @user = User.find(params[:post][:user_id])
+    new_post = current_user.sent_posts.build(params[:post])
+    if new_post.save
+      flash[:success] = 'Post created!'
+    else
+      flash[:error] = 'Sorry, there was a problem.  Please try again.'
+      redirect_to root_path
+    end
+    @user_posts = @user.received_posts
+    @post = Post.new
+    respond_to do |format|
+      format.html { redirect_to @user }
+      format.js  
+    end
+  end
   
   private 
   
