@@ -11,15 +11,16 @@ class Post < ActiveRecord::Base
   default_scope :order => 'posts.created_at DESC'
   
   #Return posts from other users being followed by the given user
-  #scope :from_users_followed_by, lambda { |user| followed_by(user) }
+  scope :from_users_friends_with, lambda { |user| friends_with(user) }
   
   private
   
   #Return an SQL condition for users followed by the given user
   
-#  def self.followed_by(user)
-#    followed_ids = %(SELECT followed_id FROM relationships WHERE followed_id = ?)
-#    where("user_id IN (#{followed_ids})", user)
-#  end
+  def self.friends_with(user)
+    friend_ids = %(SELECT friend_id FROM friendships WHERE user_id = :user_id)  #selecting all friends of user
+    where("user_id IN (#{friend_ids}) AND user_id = poster_id",
+          { :user_id => user })   #selecting all posts of user where he posts to himself
+  end
 
 end

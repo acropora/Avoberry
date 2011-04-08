@@ -2,3 +2,10 @@
 <%= post.poster.name %>
 <%= post.content %>
 Posted at: <%= post.created_at %><br />
+<%= form_tag comment_reply_user_path, :method => 'post', :remote => true do %>
+	<%= label_tag :reply %><br />
+	<div id="reply_form">
+	<%= text_area_tag :content, nil, :cols => 50, :rows => 1 %>
+	</div>
+	<%= submit_tag "Reply" %>
+<% end %>

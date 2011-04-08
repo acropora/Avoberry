@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   attr_accessor :password
   attr_accessible :name, :email, :password, :password_confirmation, :photo, :invitaiton_token, :change_password
   
-  has_attached_file :photo, :styles => { :small => "150x150>", :thumb => "75x75>" } #,
+  has_attached_file :photo, :styles => { :small => "150x150>", :thumb => "75x75>", :tiny => "35x35>" } #,
                     #:url => "/:attachment/:id/:style/:basename.:extension",
                     #:path => ":rails_root/public/:attachment/:id/:style:basename.:extension"
   
@@ -32,6 +32,14 @@ class User < ActiveRecord::Base
   has_many :sent_conversations, :class_name => 'Conversation', :foreign_key => 'c_sender_id'
   #has_many :received_conversations, :class_name => 'Conversation', :foreign_key => 'c_recipient_id'
   #has_many :received_back_conversations, :class_name => 'Conversation', :foreign_key => 'c_recipient2_id'
+  
+  #friendships
+  has_many :friendships, :dependent => :destroy
+  has_many :friends, :through => :friendships
+  
+  #friend requests
+  has_many :sent_requests, :class_name => 'Request', :foreign_key => 'sender_id'
+  has_many :received_requests, :class_name => 'Request', :foreign_key => 'recipient_id'
   
   def has_password?(submitted_password)
      encrypted_password == encrypt(submitted_password)
@@ -72,6 +80,37 @@ class User < ActiveRecord::Base
        return password 
      else
        return false
+     end
+   end
+   
+   #friend feed
+   
+   def post_feed
+     Post.from_users_friends_with(self)
+   end
+   
+   #friendship procedures
+   def friend?(friend)
+     friendships.find_by_friend_id(friend)
+   end
+
+   def friend!(friend, request)
+     friendships.create!(:friend_id => friend.id, :request_id => request.id) 
+   end
+
+   def unfriend!(friend)
+     friendships.find_by_friend_id(friend).destroy
+   end
+
+   #request procedures
+
+   def request?(friend)
+     Request.find(:all, :conditions => ["sender_id = ? and recipient_id = ?", id, friend.id])
+   end
+
+   def self.search(search)
+     if search
+       find(:all, :conditions => ['name LIKE ?', "%#{search}%"])
      end
    end
    

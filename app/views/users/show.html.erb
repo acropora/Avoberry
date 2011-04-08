@@ -1,4 +1,11 @@
 <%= image_tag @user.photo.url(:thumb) %> <%= @user.name %>
+<h3>My friends</h3>
+<%= render 'my_friends', :user => @user %>
+<h3>Friend feeds</h3>
+<%= render @friends_feed %>
+<%= render 'friend_form' %>
+<%= render @user.received_requests %>
+<h3>My Wall</h3>
 <div id="posts">
 	<%= render @user_posts %>
 </div>

@@ -1,0 +1,8 @@
+<% unless !request.friendships.empty? %>
+	<p>You have a friend request from <%= link_to request.sender.name, request.sender %></p>
+	<%= form_for request.friendships.build do |f| %>
+		<%= f.hidden_field :request_id %>
+		<%= f.submit "Accept" %>
+	<% end %>
+	<br />
+<% end %>

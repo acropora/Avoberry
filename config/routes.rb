@@ -3,9 +3,19 @@ Avoberry::Application.routes.draw do
   resources :users do
     post :reset, :on => :collection
     post :comment, :on => :member
+    post :comment_reply, :on => :member
   end
   
+  ###posts
   resources :posts
+  ###end posts
+  
+  ### friendships
+  resources :friendships do
+    post :create_request, :on => :collection
+  end
+  ###end friendships
+  
   resources :sessions, :only => [:new, :create, :destroy]
   
   ### Conversations

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110405024844) do
+ActiveRecord::Schema.define(:version => 20110406143910) do
 
   create_table "conversations", :force => true do |t|
     t.string   "subject"
@@ -27,6 +27,18 @@ ActiveRecord::Schema.define(:version => 20110405024844) do
   add_index "conversations", ["c_recipient2_id"], :name => "index_conversations_on_c_recipient2_id"
   add_index "conversations", ["c_recipient_id"], :name => "index_conversations_on_c_recipient_id"
   add_index "conversations", ["c_sender_id"], :name => "index_conversations_on_c_sender_id"
+
+  create_table "friendships", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
+    t.integer  "request_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "friendships", ["friend_id"], :name => "index_friendships_on_friend_id"
+  add_index "friendships", ["request_id"], :name => "index_friendships_on_request_id"
+  add_index "friendships", ["user_id"], :name => "index_friendships_on_user_id"
 
   create_table "msgs", :force => true do |t|
     t.string   "content"
@@ -51,6 +63,16 @@ ActiveRecord::Schema.define(:version => 20110405024844) do
 
   add_index "posts", ["poster_id"], :name => "index_posts_on_poster_id"
   add_index "posts", ["user_id"], :name => "index_posts_on_user_id"
+
+  create_table "requests", :force => true do |t|
+    t.integer  "sender_id"
+    t.integer  "recipient_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "requests", ["recipient_id"], :name => "index_requests_on_recipient_id"
+  add_index "requests", ["sender_id"], :name => "index_requests_on_sender_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

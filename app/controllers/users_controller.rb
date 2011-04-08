@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     @title = @user.name
     @post = current_user.sent_posts.build
     @user_posts = @user.received_posts
-    #@feed_posts = @user.post_feed  
+    @friends_feed = @user.post_feed  
     #@feed_assignments = @user.assignment_feed
   end
   
@@ -94,6 +94,9 @@ class UsersController < ApplicationController
       format.html { redirect_to @user }
       format.js  
     end
+  end
+  
+  def comment_reply
   end
   
   private 

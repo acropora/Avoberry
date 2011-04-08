@@ -1,0 +1,10 @@
+<div id="request_form">
+	<% unless 	!current_user.request?(@user).empty? || current_user?(@user) || current_user.friend?(@user) %>
+		<%= form_for 	current_user.sent_requests.build(:recipient_id => @user.id),
+		 				:url => create_request_friendships_path,
+						:remote => true do |f| %>
+			<%= f.hidden_field :recipient_id %>
+			<div class="actions"><%= f.submit "Add friend" %></div>
+		<% end %>
+	<% end %>
+</div>

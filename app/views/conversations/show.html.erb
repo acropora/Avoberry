@@ -4,11 +4,10 @@
 <div id="show_conv">
 	<%= render @conversation.msgs %>
 </div>
-
-	<%= form_tag reply_conversation_path, :method => 'post', :remote => true do %>
-		<%= label_tag :reply %><br />
-		<div id="reply_form">
-		<%= text_area_tag :content, nil, :cols => 50, :rows => 4 %>
-		</div>
-		<%= submit_tag "Reply" %>
-	<% end %>
+<%= form_tag reply_conversation_path, :method => 'post', :remote => true do %>
+	<%= label_tag :reply %><br />
+	<div id="reply_form">
+	<%= text_area_tag :content, nil, :cols => 50, :rows => 4 %>
+	</div>
+	<%= submit_tag "Reply" %>
+<% end %>

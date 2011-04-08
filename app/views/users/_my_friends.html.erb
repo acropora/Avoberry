@@ -1,0 +1,4 @@
+<% user.friends.each do |f| %>
+	<% avatar = image_tag f.photo.url(:tiny) %>
+	<%= link_to avatar, f %><br />
+<% end %>
