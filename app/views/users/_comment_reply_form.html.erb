@@ -1,0 +1,10 @@
+<%= form_tag comment_reply_user_path, :method => 'post', :id => 'myform', :remote => true do %>
+	<%= label_tag :reply %><br />
+	<%= hidden_field_tag :post_id, @post_id %>
+	<%= hidden_field_tag "real_commit", "" %>
+	<%= text_area_tag :content, nil, :cols => 50, :rows => 1 %>
+	<%= submit_tag "comment", :onclick => "$('real_commit').value='comment';" %>
+	<%= submit_tag "cancel", :onclick => "$('real_commit').value='cancel';" %>
+	<%-# button_to_function "Comment", "$('real_commit').value='comment';$('myform').submit();" %>
+	<%-# button_to_function "Cancel", "$('real_commit').value='cancel';$('myform').submit();" %>
+<% end %>

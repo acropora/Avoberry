@@ -5,6 +5,8 @@ class Post < ActiveRecord::Base
   belongs_to :user
   belongs_to :poster, :class_name => 'User'
   
+  has_many :comments
+  
   validates :content, :presence => true, :length => { :maximum => 140 }
   validates :user_id, :presence => true
   

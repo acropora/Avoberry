@@ -96,7 +96,37 @@ class UsersController < ApplicationController
     end
   end
   
+  def show_form
+    @post_id = params[:post_id].to_s
+    respond_to do |format|
+      format.html { redirect_to current_user }  #don't know how to handle this yet
+      format.js
+    end
+   end
+  
   def comment_reply
+    if params[:real_commit] == 'cancel'  #handle cancel request
+      @user_posts = User.find(params[:id]).received_posts
+      respond_to do |format|
+        format.html 
+        format.js { render "comment_cancel" }
+      end
+    end
+    if params[:real_commit] == 'comment' #handle reply request
+      @post = Post.find(params[:post_id])
+      @comment = @post.comments.build(:content => params[:content], :poster_id => current_user.id)
+      if @comment.save
+        flash.now[:success] = 'Comment saved!'
+      else
+        flash.now[:error] = 'There was a problem.  Please try again'
+        redirect_to user_path(params[:id])
+      end
+      @user_posts = User.find(params[:id]).received_posts
+      respond_to do |format|
+        format.html { redirect_to current_user } #put in function to take care of html
+        format.js
+      end
+    end
   end
   
   private 

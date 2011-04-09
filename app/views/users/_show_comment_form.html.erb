@@ -1,0 +1,4 @@
+<%= form_tag show_form_user_path, :method => 'get', :remote => true do %>
+	<%= hidden_field_tag :post_id, post_id %>
+	<%= submit_tag "Add comment" %>
+<% end %>
