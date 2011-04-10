@@ -2,7 +2,7 @@ Avoberry::Application.routes.draw do
 
   resources :users do
     post  :reset, :on => :collection
-    post  :comment, :on => :member
+    post  :new_post, :on => :member
     post  :comment_reply, :on => :member
     get   :show_form, :on => :member
   end

@@ -1,4 +1,4 @@
-<%= form_for @post, :url => comment_user_path, :method => 'post', :remote => true do |f| %>
+<%= form_for @post, :url => new_post_user_path, :method => 'post', :remote => true do |f| %>
 	<%= @post.content = nil %>
 	<%= f.hidden_field :user_id, :value => user_id %>
 	<%= f.label :new_post %><br />

@@ -36,6 +36,7 @@ class ConversationsController < ApplicationController
                                           :c_sender_del => false,
                                           :c_recipient_del => false)
         if @conversation.save and @conversation.create_msg(params[:content], current_user)
+          UserMailer.msg_notice(recipient).deliver
           flash[:sucess] = 'Conversation started!'
           redirect_to inbox_conversations_path
         else
@@ -115,10 +116,12 @@ class ConversationsController < ApplicationController
         @conv.update_attributes(:c_sender_del => false) if @conv.c_sender_del
         @conv.update_attributes(:c_recipient2_id => @conv.c_sender_id) if @conv.c_recipient2_id.nil?
         msg.update_attributes(:c_recip_read => true)
+        UserMailer.msg_notice(@conv.c_sender).deliver
       end
       if current_user == @conv.c_sender
         @conv.update_attributes(:c_recipient_del => false) if @conv.c_recipient_del
         msg.update_attributes(:c_sender_read => true)
+        UserMailer.msg_notice(@conv.c_recipient).deliver
       end
       flash[:success] = 'Reply sent!'
     else

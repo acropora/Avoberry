@@ -25,6 +25,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
+      UserMailer.registration_confirmation(@user).deliver
       flash[:success] = 'Welcome to Project Avocado!'
       sign_in @user, '0'
       redirect_to @user
@@ -66,8 +67,8 @@ class UsersController < ApplicationController
     @user = User.find_by_email(params[:email])
     if @user and User.find_by_name(params[:name])
       if password = @user.reset_password        
-        #user action mailer to email password
-        flash[:notice] = 'A temporary password has been sent to your email address' + password
+        UserMailer.reset_password(@user, password).deliver
+        flash[:notice] = 'A temporary password has been sent to your email address' 
         redirect_to signin_path
       else
         flash[:error] = "Sorry, there was a problem.  Please try again"
@@ -79,10 +80,13 @@ class UsersController < ApplicationController
     end
   end
   
-  def comment
+  def new_post
     @user = User.find(params[:post][:user_id])
     new_post = current_user.sent_posts.build(params[:post])
     if new_post.save
+      if !current_user?(@user)
+        UserMailer.post_notice(@user, current_user).deliver
+      end
       flash[:success] = 'Post created!'
     else
       flash[:error] = 'Sorry, there was a problem.  Please try again.'
@@ -99,19 +103,12 @@ class UsersController < ApplicationController
   def show_form
     @post_id = params[:post_id].to_s
     respond_to do |format|
-      format.html { redirect_to current_user }  #don't know how to handle this yet
+      format.html { redirect_to current_user }  #need to take care of html request
       format.js
     end
    end
   
   def comment_reply
-    if params[:real_commit] == 'cancel'  #handle cancel request
-      @user_posts = User.find(params[:id]).received_posts
-      respond_to do |format|
-        format.html 
-        format.js { render "comment_cancel" }
-      end
-    end
     if params[:real_commit] == 'comment' #handle reply request
       @post = Post.find(params[:post_id])
       @comment = @post.comments.build(:content => params[:content], :poster_id => current_user.id)
@@ -121,11 +118,11 @@ class UsersController < ApplicationController
         flash.now[:error] = 'There was a problem.  Please try again'
         redirect_to user_path(params[:id])
       end
-      @user_posts = User.find(params[:id]).received_posts
-      respond_to do |format|
-        format.html { redirect_to current_user } #put in function to take care of html
-        format.js
-      end
+    end
+    @user_posts = User.find(params[:id]).received_posts
+    respond_to do |format|
+      format.html { redirect_to current_user } #need to take care of html request
+      format.js
     end
   end
   

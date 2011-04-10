@@ -6,6 +6,7 @@ class FriendshipsController < ApplicationController
     @sender = @friend_request.sender
     if @sender.friend!(@recipient, @friend_request) && @recipient.friend!(@sender, @friend_request)
       @friend_request.update_attributes(:accepted => true)
+      UserMailer.friends_notice(@friend_request).deliver
       flash[:success] = "You are now connected to #{@sender.name}" 
       redirect_to @recipient
     else
@@ -20,6 +21,7 @@ class FriendshipsController < ApplicationController
     @recipient = User.find(params[:request][:recipient_id])
     @friend_request = current_user.sent_requests.build(params[:request])
     if @friend_request.save
+      UserMailer.request_notice(@friend_request).deliver
       flash.now[:notice] = "Friend request sent!"
     end
     respond_to do |format|
